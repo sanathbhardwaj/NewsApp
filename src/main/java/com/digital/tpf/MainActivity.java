@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.digital.tpf.Adapters.HeadlinesAdapter;
@@ -24,14 +26,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    String headlines = "top-headlines";
     String source = "business";
-
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        progressBar = findViewById(R.id.progress_circular);
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler);
         final ArrayList<HeadlinesModel> headlinesModels = new ArrayList<>();
@@ -48,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<Headlines>() {
             @Override
             public void onResponse(Call<Headlines> call, Response<Headlines> response) {
+
+                progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful()){
                     Headlines headlines = response.body();
