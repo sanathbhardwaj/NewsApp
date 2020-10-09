@@ -19,4 +19,12 @@ public interface ApiService {
             @Query("category") String category,
             @Query("country") String country
     );
+
+    @Headers("X-Api-Key:" + API_KEY)
+    @GET("/v2/top-headlines")
+    Call<Headlines> getSingleHeadline(
+            @Query("category") String category,
+            @Query("country") String country,
+            @Query("q") String query
+    );
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -21,6 +22,8 @@ public class HeadlinesAdapter extends RecyclerView.Adapter<HeadlinesAdapter.View
 
     private List<HeadlinesModel> headlinesModels;
     Context mContext;
+    static String image;
+    static String content;
 
     public HeadlinesAdapter(List<HeadlinesModel> headlinesModels) {
         this.headlinesModels = headlinesModels;
@@ -37,12 +40,13 @@ public class HeadlinesAdapter extends RecyclerView.Adapter<HeadlinesAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         String title = headlinesModels.get(position).getTitle();
         String date = headlinesModels.get(position).getPublishDate();
-        holder.setDetails(title, date);
-
+        String image = headlinesModels.get(position).getUrlToImage();
+        String description = headlinesModels.get(position).getDescription();
+        holder.setDetails(title, date, image, description);
     }
 
     @Override
@@ -50,11 +54,18 @@ public class HeadlinesAdapter extends RecyclerView.Adapter<HeadlinesAdapter.View
         return headlinesModels.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView nameTextView;
         public TextView dateTextView;
         public CardView cardView;
+        String url;
+        Context context;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -62,18 +73,33 @@ public class HeadlinesAdapter extends RecyclerView.Adapter<HeadlinesAdapter.View
             dateTextView = (TextView) itemView.findViewById(R.id.dateTextView);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
 
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    itemView.getContext().startActivity(new Intent(itemView.getContext(), HeadlineDescriptionActivity.class));
-                }
-            });
+            context = itemView.getContext();
+
+//            cardView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    itemView.getContext().startActivity(new Intent(itemView.getContext(), HeadlineDescriptionActivity.class)
+//                    .putExtra("news", url.get));
+//                }
+//            });
 
         }
-        private void setDetails(String title, String date){
+        private void setDetails(String title, String date, final String image, final String description){
 
             nameTextView.setText(title);
             dateTextView.setText(date);
+
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    System.out.println(image);
+                    System.out.println(description);
+
+                    itemView.getContext().startActivity(new Intent(itemView.getContext(), HeadlineDescriptionActivity.class)
+                            .putExtra("image", image)
+                            .putExtra("description", description));
+                }
+            });
         }
     }
 }

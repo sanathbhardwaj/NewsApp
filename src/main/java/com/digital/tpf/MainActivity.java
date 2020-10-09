@@ -55,9 +55,14 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
 
                 if (response.isSuccessful()){
+
                     Headlines headlines = response.body();
+                    System.out.println(headlines.getTotalResults());
                     for (int i = 0; i<headlines.getArticles().size(); i++){
-                        headlinesModels.add(new HeadlinesModel(headlines.getArticles().get(i).getTitle(), headlines.getArticles().get(i).getPublishedAt().toString()));
+                        headlinesModels.add(new HeadlinesModel(headlines.getArticles().get(i).getTitle()
+                                        ,headlines.getArticles().get(i).getPublishedAt().toString()
+                                        ,headlines.getArticles().get(i).getUrlToImage()
+                                        ,headlines.getArticles().get(i).getContent()));
                     }
                     adapter.notifyDataSetChanged();
                 }
